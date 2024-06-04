@@ -1,0 +1,13 @@
+prefix=C:/GITHUB REPO SENDER/HighFiveMediaHandBookChatBot/HFMCHAT/Library
+exec_prefix=C:/GITHUB REPO SENDER/HighFiveMediaHandBookChatBot/HFMCHAT/Library
+libdir=C:/GITHUB REPO SENDER/HighFiveMediaHandBookChatBot/HFMCHAT/Library/lib
+sharedlibdir=C:/GITHUB REPO SENDER/HighFiveMediaHandBookChatBot/HFMCHAT/Library/lib
+includedir=C:/GITHUB REPO SENDER/HighFiveMediaHandBookChatBot/HFMCHAT/Library/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

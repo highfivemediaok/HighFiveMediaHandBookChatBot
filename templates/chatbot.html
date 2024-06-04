@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <link rel="stylesheet" href="/static/chatbotstyles.css">
+</head>
+<body>
+    <div id="header">
+        <img src="/static/High-Five-Media-Logo.png" alt="Logo" class="logo">
+    </div>
+    
+    <div id="chatbot-container">
+        <div id="chat-area">
+            <div id="messages"></div>
+        </div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('send-button').addEventListener('click', async function() {
+            const userQuery = document.getElementById('user-input').value;
+
+            if (userQuery.trim() === "") return;
+
+            const chatBox = document.getElementById('messages');
+            chatBox.innerHTML += '<div class="user-message"><p>' + userQuery + '</p></div>';
+
+            // Show loading indicator
+            chatBox.innerHTML += `
+                <div class="bot-message" id="loading-indicator">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch('/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_query: userQuery })
+                });
+
+                const data = await response.json();
+                
+                // Remove loading indicator
+                const loadingIndicator = document.getElementById('loading-indicator');
+                if (loadingIndicator) loadingIndicator.remove();
+
+                chatBox.innerHTML += '<div class="bot-message"><p>' + JSON.stringify(data.result) + '</p></div>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching response:', error);
+            }
+            document.getElementById('user-input').value = ''; // Clear the input field
+        });
+
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-button').click();
+            }
+        });
+    </script>
+</body>
+</html>

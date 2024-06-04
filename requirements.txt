@@ -1,0 +1,17 @@
+flask 
+pandas
+pymssql
+flask-login
+pyodbc
+flask_sqlalchemy
+python-dotenv
+openai
+unstructured
+tiktoken
+pinecone-client
+pypdf
+langchain
+numpy
+python-docx
+langchain-openai 
+langchain-community
