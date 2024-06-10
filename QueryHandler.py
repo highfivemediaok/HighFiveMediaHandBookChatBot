@@ -3,8 +3,10 @@ from langchain_community.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain, SequentialChain
 from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from docx import Document
+import openai
 import pinecone
 
 load_dotenv()  # Load environment variables from .env file
@@ -16,7 +18,7 @@ os.environ['PINECONE_ENVIRONMENT'] = os.getenv('PINECONE_ENVIRONMENT', 'us-west1
 class QueryHandler:
     def __init__(self):
         self.embeddings = OpenAIEmbeddings()
-        self.llm = OpenAI(api_key=os.environ['OPENAI_API_KEY'], temperature=0.7)
+        self.llm =  ChatOpenAI(api_key=os.environ['OPENAI_API_KEY'], model = "gpt-4-turbo" , temperature=0.7)
         self.document_content = self.read_docx("ExampleOutPutOnBoarding.docx")
         self.example_content = self.read_docx("ExampleOutPutOnBoarding.docx")
         self.namespaces = [
@@ -105,11 +107,10 @@ class QueryHandler:
             "input": self.document_content,
             "example_content": self.example_content,
             "user_query": user_query
-        })
+             })
         
         response = self.clean_text(processed_data["final_response"])
         return response
-
     def handle_query(self, user_query):
         pinecone_data = self.query_pinecone(user_query)
         
@@ -119,4 +120,3 @@ class QueryHandler:
             response = "There doesn't seem to be anything in the document referencing that."
         
         return response
-
